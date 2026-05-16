@@ -3,6 +3,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     
+    private Animator anime;
     private Rigidbody2D corpo;
     public float velocidade = 3.0f;
     private SpriteRenderer sprite;
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     {
         corpo = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        anime = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -22,6 +24,7 @@ public class Player : MonoBehaviour
         //Processa o input
         flip(horizontal);
         corpo.linearVelocity = new Vector2(horizontal * velocidade, corpo.linearVelocity.y);
+        anime.SetFloat("speed", Mathf.Abs(horizontal)); // |-1| ou |1| = 1
     }
 
     private void flip(float horizontal)
