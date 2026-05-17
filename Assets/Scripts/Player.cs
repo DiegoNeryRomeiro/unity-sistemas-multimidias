@@ -7,6 +7,10 @@ public class Player : MonoBehaviour
     private Rigidbody2D corpo;
     public float velocidade = 3.0f;
     private SpriteRenderer sprite;
+
+    // PARTE DO PULO
+    public Transform groundCheck;
+    public LayerMask groundLayer;
     void Start()
     {
         corpo = GetComponent<Rigidbody2D>();
@@ -14,9 +18,13 @@ public class Player : MonoBehaviour
         anime = GetComponent<Animator>();
     }
 
+    
+
+
     // Update is called once per frame
     void Update()
-    {
+    {   
+        Jump();
         //Pega o input
         float horizontal = Input.GetAxis("Horizontal");
         //Debug.Log(horizontal);
@@ -38,4 +46,16 @@ public class Player : MonoBehaviour
             sprite.flipX = true;
         }
     }
-}
+
+    private void Jump(){
+        if(Input.GetKeyDown(KeyCode.Space) && IsGrounded()){
+            corpo.AddForce(new Vector2(0, 7.0f), ForceMode2D.Impulse);
+        }
+    }
+
+    private bool IsGrounded(){
+    // Physics2D.OverlapCircle direto retorna true se encostar na camada certa, sem precisar de 'for'
+    return Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
+    }
+}   
+
