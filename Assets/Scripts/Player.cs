@@ -33,6 +33,15 @@ public class Player : MonoBehaviour
         flip(horizontal);
         corpo.linearVelocity = new Vector2(horizontal * velocidade, corpo.linearVelocity.y);
         anime.SetFloat("speed", Mathf.Abs(horizontal)); // |-1| ou |1| = 1
+
+        if(corpo.linearVelocity.y < -0.1f){
+            anime.SetBool("Falling", true);
+        }
+
+        Layers();
+
+        Attack();
+
     }
 
     private void flip(float horizontal)
@@ -50,12 +59,33 @@ public class Player : MonoBehaviour
     private void Jump(){
         if(Input.GetKeyDown(KeyCode.Space) && IsGrounded()){
             corpo.AddForce(new Vector2(0, 7.0f), ForceMode2D.Impulse);
+            anime.SetTrigger("Jump");
         }
+    }
+   
+    private void Attack(){
+        if(Input.GetKeyDown(KeyCode.L) && IsGrounded()){
+            anime.SetTrigger("Attack");
+            corpo.linearVelocity = Vector2.zero; // Para o personagem no momento do ataque
+        }
+
     }
 
     private bool IsGrounded(){
     // Physics2D.OverlapCircle direto retorna true se encostar na camada certa, sem precisar de 'for'
-    return Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
+        anime.SetBool("Falling", false);
+        return Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
+    }
+
+    private void Layers(){
+
+        if(!IsGrounded()){
+            anime.SetLayerWeight(1, 1);
+        } else {
+            anime.SetLayerWeight(1, 0);
+        }
+        
     }
 }   
+
 
